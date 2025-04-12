@@ -1,0 +1,53 @@
+package com.restaurant_service.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.restaurant_service.model.Restaurant;
+import com.restaurant_service.service.RestaurantService;
+
+//controller/RestaurantController.java
+@RestController
+@RequestMapping("/restaurants")
+public class RestaurantController {
+ @Autowired
+ private RestaurantService restaurantService;
+
+ @PostMapping
+ public Restaurant create(@RequestBody Restaurant r) {
+     return restaurantService.create(r);
+ }
+
+ @GetMapping("/{id}")
+ public Restaurant get(@PathVariable Long id) {
+     return restaurantService.get(id);
+ }
+
+ @GetMapping
+ public List<Restaurant> getAll() {
+     return restaurantService.getAll();
+ }
+
+ @DeleteMapping("/{id}")
+ public void delete(@PathVariable Long id) {
+	 restaurantService.delete(id);
+ }
+
+ // New endpoint to handle complex query
+ @GetMapping("/search")
+ public List<Restaurant> getByFilters(
+     @RequestParam(value = "location", required = false) String location,
+     @RequestParam(value = "cuisine", required = false) String cuisine,
+     @RequestParam(value = "rating", required = false) Double rating) {
+     
+     return restaurantService.getRestaurantsByFilters(location, cuisine, rating);
+ }
+}
